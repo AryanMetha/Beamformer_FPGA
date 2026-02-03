@@ -7,13 +7,11 @@ module beamformer_top #(
     parameter COEFF_WIDTH       = `COEFF_WIDTH,
     parameter ACC_WIDTH         = `ACC_WIDTH
 ) (
-    // ========== Clock & Reset ==========
     input  wire                         core_clk,
     input  wire                         axi_clk,
     input  wire                         async_rst_n,
 
-    // ========== ADC Inputs (flattened) ==========
-    // Total width: NUM_LANES × NUM_CH × 2 × IQ_WIDTH
+    
     input  wire [(NUM_LANES*NUM_CH*2*IQ_WIDTH)-1:0] adc_data_i,
     input  wire [NUM_LANES-1:0]         adc_valid_i,
 
@@ -39,8 +37,7 @@ module beamformer_top #(
     wire core_rst_n = async_rst_n;  // Bypass broken synchronizer
     wire axi_rst_n = async_rst_n;
 
-    // ========== COEFFICIENT MEMORY SIGNALS ==========
-    // FIXED: Now receives all 24 channels in parallel (768 bits)
+
     wire [(NUM_CH*2*COEFF_WIDTH)-1:0] core_coeff_data;
     wire [31:0] core_sample_count;
     
@@ -48,10 +45,7 @@ module beamformer_top #(
     wire core_sample_valid;
     assign core_sample_valid = |adc_valid_i;
     
-    // REMOVED: coeff_addr_counter - no longer needed!
-    // Coefficient buffer now outputs all channels in parallel
 
-    // ========== COEFFICIENT DOUBLE BUFFER ==========
     coeff_double_buffer #(
         .NUM_CH(NUM_CH),
         .COEFF_WIDTH(COEFF_WIDTH),
@@ -61,7 +55,7 @@ module beamformer_top #(
         .core_clk(core_clk),
         .core_rst_n(core_rst_n),
         .core_sample_valid(core_sample_valid),
-        // REMOVED: .core_coeff_addr(coeff_addr_counter),  // No longer needed!
+        
         .core_coeff_data(core_coeff_data),  // Now outputs all 24 channels (768 bits)
         .core_sample_count(core_sample_count),
         
