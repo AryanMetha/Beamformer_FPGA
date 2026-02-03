@@ -2,11 +2,9 @@
 `include "beamformer_defines.vh"
 
 ////////////////////////////////////////////////////////////////////////////////
-// FIXED TESTBENCH for FPGA Beamformer
-// Changes:
-// 1. ADC data now has non-zero test pattern
-// 2. Expected value calculation implemented
-// 3. Added better debug output
+// FIXED TESTBENCH for FPGA Beamformer 
+// 1. Expected value calculation implemented
+// 2. Added better debug output
 ////////////////////////////////////////////////////////////////////////////////
 
 module tb_beamformer_top;
